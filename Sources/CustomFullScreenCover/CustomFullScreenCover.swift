@@ -36,12 +36,12 @@ public extension View {
     ///         .frame(maxWidth: .infinity, maxHeight: .infinity)
     ///         .background(.orange)
     ///         .customFullScreenCover(isPresented: $isPresented, transition: .slide) {
-    ///             FullScreenView(isPresented: $isPresented)
+    ///             ChildView(isPresented: $isPresented)
     ///         }
     ///   }
     /// }
     ///
-    /// struct FullScreenView: View {
+    /// struct ChildView: View {
     ///   @Binding var isPresented: Bool
     ///
     ///   var body: some View {
