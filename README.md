@@ -29,12 +29,12 @@ struct ContentView: View {
             transition: transition,
             animation: animation
         ) {
-            FullScreenView(isPresented: $isPresented)
+            ChildView(isPresented: $isPresented)
         }
     }
 }
 
-struct FullScreenView: View {
+struct ChildView: View {
   @Binding var isPresented: Bool
 
   var body: some View {
