@@ -24,7 +24,7 @@ public extension View {
     ///
     /// ```swift
     /// struct ContentView: View {
-    ///   @State private var isPresented = false
+    ///     @State private var isPresented = false
     ///
     ///     var body: some View {
     ///         Button("Show") {
@@ -35,7 +35,7 @@ public extension View {
     ///         .shadow(radius: 2)
     ///         .frame(maxWidth: .infinity, maxHeight: .infinity)
     ///         .background(.orange)
-    ///         .customFullScreenCover(isPresented: $isPresented) {
+    ///         .customFullScreenCover(isPresented: $isPresented, transition: .slide) {
     ///             FullScreenView(isPresented: $isPresented)
     ///         }
     ///   }
