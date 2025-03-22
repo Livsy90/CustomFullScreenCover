@@ -6,8 +6,14 @@ Unlike the standard `fullScreenCover` modifier, this extension allows you to cus
 ## Example: 
 
 ```swift
-truct ContentView: View {
-  @State private var isPresented = false
+struct ContentView: View {
+    @State private var isPresented = false
+    
+    let animation: Animation = .bouncy
+    let transition: AnyTransition = .asymmetric(
+        insertion: .opacity,
+        removal: .scale.combined(with: .opacity)
+    )
     
     var body: some View {
         Button("Show") {
@@ -18,10 +24,14 @@ truct ContentView: View {
         .shadow(radius: 2)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.orange)
-        .customFullScreenCover(isPresented: $isPresented) {
+        .customFullScreenCover(
+            isPresented: $isPresented,
+            transition: transition,
+            animation: animation
+        ) {
             FullScreenView(isPresented: $isPresented)
         }
-  }
+    }
 }
 
 struct FullScreenView: View {
