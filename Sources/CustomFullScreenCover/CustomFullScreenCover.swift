@@ -75,6 +75,49 @@ public extension View {
         )
     }
 
+    /// Presents a modal view that can be dismissed by swiping from the left edge.
+///
+/// This method allows you to display a view as a full-screen modal that can be dismissed by swiping from the left edge of the screen, like the UINavigationController interactive pop gesture.
+///
+/// - Parameters:
+///   - isPresented: A binding to a Boolean value that determines whether the modal is presented.
+///
+/// - Returns: A view that presents the specified content in a modal with the ability to be dismissed by swiping from the left edge.
+///
+/// **Example:**
+///
+/// ```swift
+/// struct ContentView: View {
+///     @State private var isPresented = false
+///
+///     var body: some View {
+///         Button("Show Modal") {
+///             isPresented = true
+///         }
+///         .popableModal(isPresented: $isPresented) {
+///             VStack {
+///                 Text("This is a modal view")
+///                 Button("Dismiss") {
+///                     isPresented = false
+///                 }
+///             }
+///             .frame(maxWidth: .infinity, maxHeight: .infinity)
+///             .background(Color.blue.opacity(0.8))
+///         }
+///     }
+/// }
+/// ```
+public func popableModal<Content: View>(
+    isPresented: Binding<Bool>,
+    @ViewBuilder content: @escaping () -> Content
+) -> some View {
+    modifier(
+        PopableModal(
+            isPresented: isPresented,
+            presentedView: content
+        )
+    )
+}
     func popableModal<Content: View>(
         isPresented: Binding<Bool>,
         @ViewBuilder content: @escaping () -> Content
