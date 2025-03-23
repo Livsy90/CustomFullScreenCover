@@ -84,6 +84,8 @@ private struct CustomFullScreenCoverModifier<PresentedView: View>: ViewModifier 
 
     @State private var isPresentedInternal = false
     @State private var isShowContent = false
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var isActive = true
 
     func body(content: Content) -> some View {
         content
@@ -93,6 +95,7 @@ private struct CustomFullScreenCoverModifier<PresentedView: View>: ViewModifier 
                         presentedView()
                             .transition(transition)
                             .onDisappear {
+                                guard isActive else { return }
                                 isPresentedInternal = false
                                 isPresented = false
                             }
@@ -112,6 +115,18 @@ private struct CustomFullScreenCoverModifier<PresentedView: View>: ViewModifier 
                     isPresentedInternal = true
                 } else {
                     isShowContent = false
+                }
+            }
+            .onChange(of: scenePhase) { _, newValue in
+                switch newValue {
+                case .background, .inactive:
+                    isActive = false
+                case .active:
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        isActive = true
+                    }
+                @unknown default:
+                    break
                 }
             }
     }
