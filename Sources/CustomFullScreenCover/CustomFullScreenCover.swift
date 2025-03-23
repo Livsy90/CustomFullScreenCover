@@ -17,9 +17,6 @@ public extension View {
     ///
     /// - Returns: A view that presents the specified content in a full-screen cover with the given transition and animation.
     ///
-    /// - Note: This method uses a custom view modifier to manage the presentation logic, offering greater control over
-    ///   the appearance and dismissal animations compared to the standard `fullScreenCover` modifier.
-    ///
     /// **Example:**
     ///
     /// ```swift
