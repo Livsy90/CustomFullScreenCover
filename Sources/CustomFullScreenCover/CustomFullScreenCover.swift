@@ -74,6 +74,19 @@ public extension View {
             )
         )
     }
+
+    func popableModal<Content: View>(
+        isPresented: Binding<Bool>,
+        @ViewBuilder content: @escaping () -> Content
+    ) -> some View {
+        
+        modifier(
+            PopableModal(
+                isPresented: isPresented,
+                presentedView: content
+            )
+        )
+    }
 }
 
 private struct CustomFullScreenCoverModifier<PresentedView: View>: ViewModifier {
@@ -128,6 +141,60 @@ private struct CustomFullScreenCoverModifier<PresentedView: View>: ViewModifier 
                 @unknown default:
                     break
                 }
+            }
+    }
+}
+
+private struct PopableModal<PresentedView: View>: ViewModifier {
+    @Binding var isPresented: Bool
+    @State private var offset: CGSize = .zero
+    @ViewBuilder let presentedView: () -> PresentedView
+    
+    func body(content: Content) -> some View {
+        content
+            .customFullScreenCover(
+                isPresented: $isPresented,
+                transition: .move(edge: .trailing).combined(with: .opacity)
+            ) {
+                presentedView()
+                    .compositingGroup()
+                    .shadow(radius: 12)
+                    .offset(offset)
+                    .overlay(alignment: .leading) {
+                        VStack {
+                            Rectangle()
+                                .fill(.clear)
+                                .frame(height: 44)
+                                .allowsHitTesting(false)
+                            Color.clear
+                                .contentShape(Rectangle())
+                                .simultaneousGesture(
+                                    DragGesture()
+                                        .onChanged { value in
+                                            if value.translation.width > 0 {
+                                                withAnimation(.linear(duration: 0.1)) {
+                                                    offset = CGSize(width: value.translation.width, height: 0)
+                                                }
+                                            }
+                                        }
+                                        .onEnded { value in
+                                            if value.translation.width > 100 {
+                                                withAnimation(.linear(duration: 0.1)) {
+                                                    offset = CGSize(width: UIScreen.main.bounds.width, height: 0)
+                                                }
+                                                isPresented = false
+                                                offset = .zero
+                                            } else {
+                                                withAnimation(.linear(duration: 0.1)) {
+                                                    offset = .zero
+                                                }
+                                            }
+                                        }
+                                )
+                                .allowsHitTesting(isPopGestureEnabled)
+                        }
+                        .frame(width: 16)
+                    }
             }
     }
 }
